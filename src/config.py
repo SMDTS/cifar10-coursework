@@ -10,3 +10,4 @@ LEARNING_RATE = 1e-3
 CIFAR10_MEAN = (0.4914, 0.4822, 0.4465)
 CIFAR10_STD  = (0.2470, 0.2435, 0.2616)
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+NUM_WORKERS = 2
