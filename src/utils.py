@@ -49,3 +49,27 @@ def load_all_results():
             data.pop("history", None)
             rows.append(data)
     return pd.DataFrame(rows)
+
+def plot_training_curves(history, title, filename):
+    """Side-by-side training vs validation loss and accuracy per epoch."""
+    os.makedirs(config.RESULTS_DIR, exist_ok=True)
+    epochs = range(1, len(history["train_loss"]) + 1)
+    fig, (ax_loss, ax_acc) = plt.subplots(1, 2, figsize=(12, 4.5))
+
+    ax_loss.plot(epochs, history["train_loss"], label="Train")
+    ax_loss.plot(epochs, history["val_loss"], label="Validation")
+    ax_loss.set(title=f"{title}: Loss", xlabel="Epoch", ylabel="Cross-entropy loss")
+
+    ax_acc.plot(epochs, history["train_acc"], label="Train")
+    ax_acc.plot(epochs, history["val_acc"], label="Validation")
+    ax_acc.set(title=f"{title}: Accuracy", xlabel="Epoch", ylabel="Accuracy")
+
+    for ax in (ax_loss, ax_acc):
+        if "best_epoch" in history:
+            ax.axvline(history["best_epoch"], linestyle="--", color="grey",
+                       label="Best validation epoch")
+        ax.legend()
+
+    fig.tight_layout()
+    fig.savefig(os.path.join(config.RESULTS_DIR, filename), dpi=150)
+    plt.close(fig)
